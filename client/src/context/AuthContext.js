@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   const fetchUser = async (authToken) => {
     try {
       const res = await axios.get(
-        'http://localhost:5001/api/auth/me',
+        'https://finzee-3bu0.onrender.com',
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
