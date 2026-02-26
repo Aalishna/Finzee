@@ -1,68 +1,224 @@
-import axios from 'axios';
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
 
-const api = axios.create({
-  baseURL: 'http://localhost:5001/api',
-  headers: { 'Content-Type': 'application/json' },
-});
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
-// Attach token to every request
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('finzee-token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-}, (error) => Promise.reject(error));
+.modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-xl);
+  padding: 28px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+  box-shadow: var(--shadow-lg), 0 0 60px rgba(124, 92, 255, 0.1);
+}
 
-// Handle 401 globally
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('finzee-token');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
 
-// ── Auth ──────────────────────────────────────────────────
-export const authAPI = {
-  register: (data) => api.post('/auth/register', data),
-  login: (data) => api.post('/auth/login', data),
-  me: () => api.get('/auth/me'),
-};
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
 
-// ── Expenses ──────────────────────────────────────────────
-export const expensesAPI = {
-  getAll: (params) => api.get('/expenses', { params }),
-  create: (data) => api.post('/expenses', data),
-  update: (id, data) => api.put(`/expenses/${id}`, data),
-  delete: (id) => api.delete(`/expenses/${id}`),
-  parseNatural: (text) => api.post('/expenses/parse-natural', { text }),
-};
+.modal-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-family: 'Syne', sans-serif;
+}
 
-// ── Budget ────────────────────────────────────────────────
-export const budgetAPI = {
-  get: () => api.get('/budget'),
-  set: (data) => api.post('/budget', data),
-  update: (category, data) => api.put(`/budget/${category}`, data),
-};
+.modal-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
 
-// ── Goals ─────────────────────────────────────────────────
-export const goalsAPI = {
-  getAll: () => api.get('/goals'),
-  create: (data) => api.post('/goals', data),
-  update: (id, data) => api.put(`/goals/${id}`, data),
-  delete: (id) => api.delete(`/goals/${id}`),
-};
+.modal-close {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  border-radius: 8px;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  transition: all 0.2s;
+}
 
-// ── Insights ──────────────────────────────────────────────
-export const insightsAPI = {
-  get: () => api.get('/insights'),
-};
+.modal-close:hover {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
 
-// ── Health Score ──────────────────────────────────────────
-export const healthScoreAPI = {
-  get: () => api.get('/health-score'),
-};
+/* NL Toggle */
+.nl-toggle-bar {
+  display: flex;
+  background: var(--bg-input);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 20px;
+  gap: 4px;
+}
 
-export default api;
+.nl-tab {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.nl-tab.active {
+  background: var(--accent-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+/* NL mode */
+.nl-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nl-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.nl-hint em {
+  color: var(--accent-secondary);
+  font-style: normal;
+}
+
+.nl-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Amount field */
+.amount-field {
+  display: flex;
+  align-items: center;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 8px 16px;
+  gap: 8px;
+  margin-bottom: 6px;
+  transition: border-color 0.2s;
+}
+
+.amount-field:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.currency-symbol {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  font-family: 'Syne', sans-serif;
+}
+
+.amount-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: 'Syne', sans-serif;
+}
+
+.amount-input.error {
+  color: var(--color-danger);
+}
+
+.amount-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Category grid */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.cat-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 4px;
+  border-radius: 10px;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.cat-chip span:first-child {
+  font-size: 1.1rem;
+}
+
+.cat-chip:hover {
+  border-color: var(--cat-color);
+  color: var(--cat-color);
+  background: rgba(124, 92, 255, 0.06);
+}
+
+.cat-chip.active {
+  border-color: var(--cat-color);
+  background: color-mix(in srgb, var(--cat-color) 12%, transparent);
+  color: var(--cat-color);
+  font-weight: 600;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
