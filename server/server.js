@@ -12,7 +12,7 @@ const app = express();
 ======================== */
 
 const corsOptions = {
-  origin: 'http://localhost:3000', // React frontend
+  origin: 'https://finzee-sigma.vercel.app/', // React frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
