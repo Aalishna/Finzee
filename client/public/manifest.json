@@ -1,0 +1,9 @@
+{
+  "short_name": "Finzee",
+  "name": "Finzee - Your wallet has a story",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#6C47FF",
+  "background_color": "#0F0A1E"
+}
